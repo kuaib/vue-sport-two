@@ -56,5 +56,14 @@ export function forgePsw(data) {
     })
 }
 
+// 更改密码
+export function changePsw(data) {
+    return request({
+        url: '/user/changePsw',
+        method: 'post',
+        data: data
+    })
+}
+
 
 

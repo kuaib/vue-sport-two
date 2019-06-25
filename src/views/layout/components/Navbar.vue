@@ -9,8 +9,8 @@
             </el-row>
         </el-menu>
 
-        <el-dialog :title="$t('login.changePsw')" :visible.sync="showDialog" append-to-body>
-            <!--<change-psw/>-->
+        <el-dialog :title="$t('navbar.changePsw')" :visible.sync="showDialog" append-to-body>
+            <change-psw></change-psw>
         </el-dialog>
     </div>
 
@@ -19,12 +19,12 @@
 <script>
     import {mapGetters} from 'vuex'
     import Hamburger from '@/components/Hamburger'
-    import {changePsw} from './index'
+    import changePsw from './changePsw'
 
     export default {
         data() {
             return {
-                showDialog: true
+                showDialog: false
             }
         },
         components: {Hamburger, changePsw},

@@ -82,7 +82,7 @@ export default {
     },
     navbar: {
         logOut: '注销',
-        changePsw: '忘记密码',
+        changePsw: '更改密码',
 
         dashboard: '首页',
         github: '项目地址',

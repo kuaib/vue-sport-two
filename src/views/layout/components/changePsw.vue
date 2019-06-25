@@ -8,15 +8,22 @@
 
         <el-row :gutter="20">
             <el-col :span="16" :offset="4">
-                <el-form ref="forgetPswForm" :model="form" :rules="rules" label-width="80px">
-                    <el-form-item label="手机号" prop="userName">
-                        <el-input placeholder="请输入手机号" v-model="form.userName"></el-input>
+                <el-form ref="changePswForm" :model="form" :rules="rules" label-width="80px">
+                    <el-form-item label="手机号" prop="phone">
+                        <el-input placeholder="请输入手机号" v-model="form.phone" maxlength="11"></el-input>
                     </el-form-item>
-                    <el-form-item label="验证码" prop="newPsw">
-                        <el-input placeholder="请输入验证码" v-model="form.newPsw" show-password></el-input>
+                    <el-form-item label="验证码" prop="code">
+                        <el-row>
+                            <el-col :span="18" style="padding-right:10px;">
+                                <el-input placeholder="请输入验证码" v-model="form.code" show-password maxlength="6"></el-input>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-button type="primary" @click.native.prevent="getCode">获取验证码</el-button>
+                            </el-col>
+                        </el-row>
                     </el-form-item>
-                    <el-form-item label="新密码" prop="confirmPsw">
-                        <el-input placeholder="请输入确认密码" v-model="form.confirmPsw" show-password></el-input>
+                    <el-form-item label="新密码" prop="newPsw">
+                        <el-input placeholder="请输入新密码" v-model="form.newPsw" show-password></el-input>
                     </el-form-item>
                     <el-form-item style="text-align: center;">
                         <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">更改密码</el-button>
@@ -28,27 +35,52 @@
 </template>
 
 <script>
-    import {forgePsw}  from '@/api/login'
+    import {changePsw}  from '@/api/login'
     export default {
+        name: 'changePsw',
         data() {
+            let validatePhone = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入手机号'));
+                } else if (!(/^1[3456789]\d{9}$/.test(value))) {
+                    callback(new Error('手机号格式不正确'));
+                } else {
+                    callback();
+                }
+            };
+            let validateCode = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入验证码'));
+                } else if (!/^\d+$/.test(value)) {
+                    callback(new Error('验证码必须是数字'));
+                } else {
+                    callback();
+                }
+            };
+            let validateNewPsw = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入新密码'));
+                } else {
+                    callback();
+                }
+            };
             return  {
                 form: {
-                    userName: '',      // 初始密码
-                    newPsw: '',        // 新密码
-                    confirmPsw: '',    // 确认密码
+                    phone: '',      // 手机号
+                    code: '',       // 验证码
+                    newPsw: '',     // 新密码
                 },
                 loading: false,
 
                 rules: {
-                    userName: [
-                        { required: true, message: '请输入用户名', trigger: 'blur' }
+                    phone: [
+                        {validator: validatePhone, trigger: 'blur'}
+                    ],
+                    code: [
+                        {validator: validateCode, trigger: 'blur'}
                     ],
                     newPsw: [
-                        { required: true, message: '请输入新密码', trigger: 'blur' },
-                        // { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
-                    ],
-                    confirmPsw: [
-                        { required: true, message: '请输入确认密码', trigger: 'blur' }
+                        {validator: validateNewPsw, trigger: 'blur'}
                     ],
                 }
             }
@@ -56,14 +88,7 @@
 
         methods: {
             onSubmit() {
-                if(this.form.newPsw.trim() === this.form.confirmPsw.trim) {
-                    this.$message({
-                        message: '新密码与确认密码不一致，请重新输入',
-                        type: 'warning'
-                    });
-                    return;
-                }
-                this.$refs.forgetPswForm.validate(valid => {
+                this.$refs.changePswForm.validate(valid => {
                     if (valid) {
                         this.loading = true;
                         forgePsw(this.form).then(res => {
