@@ -1,26 +1,33 @@
 <template>
-    <el-menu class="navbar" mode="horizontal">
-        <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-        <div class="projectName">111</div>
-        <el-row class="right-menu">
-            <!--<el-button type="primary" v-if="$route.path.indexOf('/dashboard')!=-1">{{$t('navbar.allAthlete')}}-->
-            <!--</el-button>-->
-            <!--<el-button type="primary">{{$t('navbar.teamManage')}}</el-button>-->
-            <!--<el-button type="primary">{{$t('navbar.enterData')}}</el-button>-->
-            <!--<el-button type="primary">{{$t('navbar.test')}}</el-button>-->
-            <el-button type="primary" @click="logout">{{$t('navbar.logOut')}}</el-button>
-        </el-row>
-    </el-menu>
+    <div>
+        <el-menu class="navbar" mode="horizontal">
+            <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+            <div class="projectName">111</div>
+            <el-row class="right-menu">
+                <el-button type="primary" @click="showDialog=true">{{$t('navbar.changePsw')}}</el-button>
+                <el-button type="primary" @click="logout">{{$t('navbar.logOut')}}</el-button>
+            </el-row>
+        </el-menu>
+
+        <el-dialog :title="$t('login.changePsw')" :visible.sync="showDialog" append-to-body>
+            <!--<change-psw/>-->
+        </el-dialog>
+    </div>
+
 </template>
 
 <script>
     import {mapGetters} from 'vuex'
     import Hamburger from '@/components/Hamburger'
+    import {changePsw} from './index'
 
     export default {
-        components: {
-            Hamburger
+        data() {
+            return {
+                showDialog: true
+            }
         },
+        components: {Hamburger, changePsw},
         computed: {
             ...mapGetters([
                 'sidebar',
@@ -28,9 +35,7 @@
                 'avatar'
             ])
         },
-        created() {
-            // console.log(this.$route)
-        },
+
         methods: {
             toggleSideBar() {
                 this.$store.dispatch('toggleSideBar')

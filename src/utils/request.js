@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import {Message} from 'element-ui'
+import {Message} from 'element-ui'
 // import store from '@/store'
 import {getToken} from '@/utils/auth'
 import Cookies from 'js-cookie'
@@ -34,6 +34,10 @@ service.interceptors.response.use(response => {
     }
     return response;
 }, error => {
+    this.$message({
+        message: '系统开小差了，请稍后重试',
+        type: 'error'
+    });
     return Promise.reject(error);
 })
 export default service

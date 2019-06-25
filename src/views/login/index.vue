@@ -27,14 +27,14 @@
             </el-form-item>
 
             <div class="tips">
-                <span @click="showDialog=true">{{$t('login.forgetPswd')}}</span>
+                <span @click="showDialog=true">{{$t('login.forgetPswd')}}？</span>
             </div>
             <el-button class="loginBtn" type="primary" :loading="loading" @click.native.prevent="handleLogin">{{$t('login.logIn')}}</el-button>
         </el-form>
 
         <el-dialog :title="$t('login.forgetPswd')" :visible.sync="showDialog" append-to-body>
-            <br/>
-            <forget-pswd/>
+            <!--<forget-pswd/>-->
+            <forget-psw/>
         </el-dialog>
 
     </div>
@@ -42,10 +42,11 @@
 
 <script>
     import LangSelect from '@/components/LangSelect'
-    import forgetPswd from './forgetPswd'
+    // import forgetPswd from './forgetPswd'
+    import forgetPsw from './forgetPsw'
 
     export default {
-        components: {LangSelect, forgetPswd},
+        components: {LangSelect, forgetPsw},
         name: 'login',
         data() {
             const validateUsername = (rule, value, callback) => {

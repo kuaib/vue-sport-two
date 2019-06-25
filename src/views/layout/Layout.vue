@@ -12,11 +12,13 @@
                 <app-main></app-main>
             </div>
         </div>
+
+
     </div>
 </template>
 
 <script>
-    import {Navbar, Sidebar, AppMain, TagsView} from './components'
+    import {Navbar, Sidebar, AppMain, TagsView, changePsw} from './components'
     import ResizeMixin from './mixin/ResizeHandler'
     import logoTip from '@/components/logoTip'
 
@@ -27,7 +29,8 @@
             Sidebar,
             AppMain,
             TagsView,
-            logoTip
+            logoTip,
+            changePsw
         },
         mixins: [ResizeMixin],
         computed: {

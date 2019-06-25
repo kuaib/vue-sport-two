@@ -82,10 +82,7 @@ export default {
     },
     navbar: {
         logOut: '注销',
-        allAthlete: '所有运动员',
-        teamManage: '队伍管理',
-        enterData: '录入数据',
-        test: '测试',
+        changePsw: '忘记密码',
 
         dashboard: '首页',
         github: '项目地址',
@@ -98,7 +95,7 @@ export default {
         logIn: '登录',
         username: '用户名或邮箱',
         password: '密码',
-        forgetPswd: '忘记密码？',
+        forgetPswd: '忘记密码',
         usernameW1: '请输入用户名',
         usernameW2: '用户名不存在',
         passwordW1: '请输入密码',

@@ -30,29 +30,7 @@ export function getUserMenue(roleCode) {
     })
 }
 
-// export function loginByUsername(username, password) {
-//     const data = {
-//         username,
-//         password
-//     }
-//     return request({
-//         url: '/login/login',
-//         method: 'post',
-//         data
-//     })
-// }
-//
-//
-// // 获取左侧菜单（即：路由信息，路由全部需要动态返回）
-// export function getUserMenue(token) {
-//     return request({
-//         url: '/user/info',
-//         method: 'get',
-//         params: {token}
-//     })
-// }
-
-
+// 退出登录
 export function logout() {
     return request({
         url: '/login/logout',
@@ -66,6 +44,15 @@ export function getUserInfo(token) {
         url: '/user/info',
         method: 'get',
         params: {token}
+    })
+}
+
+// 忘记密码
+export function forgePsw(data) {
+    return request({
+        url: '/user/forgePsw',
+        method: 'post',
+        data: data
     })
 }
 
