@@ -14,6 +14,7 @@ function filterPro(arr, proName) {
 }
 
 let aa = [
+    // 队伍管理
     {
         "id": 1,
         "path": "/teamManage",  // 第一级菜单前面有斜杠： /
@@ -74,59 +75,10 @@ let aa = [
                 "hideInMenu": true
             }]
     },
+
+    // 队伍看板
     {
         "id": 2,
-        "path": "/athleteCentral",
-        "component": "Layout",
-        "name": "",
-        "title": "运动员看板",
-        "icon": "ios-create-outline",
-        "parentId": 0,
-        "enabled": 1,
-        "roles": null,
-        "meta": {"access": null, "title": "运动员看板", "icon": "ios-create-outline", "hideInMenu": false},
-        "url": "",
-        "hideInMenu": false,
-        "children": [
-            {
-                "id": 4,
-                "path": "list",
-                "component": "views/athleteCentral/list",
-                "name": "athleteCentral",
-                "title": "运动员看板",
-                "icon": "ios-people-outline",
-                "parentId": 2,
-                "enabled": 1,
-                "children": null,
-                "roles": null,
-                "meta": {"access": null, "title": "运动员列表", "icon": "ios-people-outline", "hideInMenu": false},
-                "url": "",
-                "hideInMenu": false
-            },
-            {
-                "id": 5,
-                "path": "add",
-                "component": "views/athleteCentral/add",
-                "name": "athleteAdd",
-                "title": "新建运动员",
-                "icon": "ios-people-outline",
-                "parentId": 2,
-                "enabled": 1,
-                "children": null,
-                "roles": null,
-                "meta": {
-                    "access": null,
-                    "title": "新建运动员",
-                    "icon": "ios-people-outline",
-                    "hideInMenu": true
-                },
-                "url": "",
-                "hideInMenu": true
-            }
-        ]
-    },
-    {
-        "id": 3,
         "path": "/teamOverview",  // 第一级菜单前面有斜杠： /
         "component": "Layout",
         "name": "",  // 可有可无，我用不到*****
@@ -165,88 +117,10 @@ let aa = [
                 "hideInMenu": false
             }]
     },
+
+    // 生成报告
     {
-        "id": 4,
-        "path": "/teamTest",  // 第一级菜单前面有斜杠： /
-        "component": "Layout",
-        "name": "",  // 可有可无，我用不到*****
-        "title": "队伍测试(人工)",  // 可有可无，我用不到*****
-        "icon": "ios-color-wand",
-        "parentId": 0,
-        "enabled": 1,
-        "roles": null,
-        "meta": {
-            "access": null,
-            "title": "队伍测试(人工)",        //  title取我定义的
-            "icon": "ios-color-wand",
-            "hideInMenu": false
-        },
-        "url": "",
-        "hideInMenu": false,
-        "children": [
-            {
-                "id": 3,
-                "path": "teamTest", // children中的path：取我定义的（子菜单path前不加斜杠： /）
-                "component": "views/teamTest/index", // children中的component：取我定义的，最前面不加斜杠： /
-                "name": "teamTest",     // children中的name：取我定义的
-                "title": "队伍测试(人工)",      // 可有可无*****
-                "icon": "ios-basket-outline",
-                "parentId": 1,
-                "enabled": 1,
-                "children": null,
-                "roles": null,
-                "meta": {
-                    "access": null,
-                    "title": "队伍测试(人工)",    // children中的title：取我定义的
-                    "icon": "ios-basket-outline",
-                    "hideInMenu": false
-                },
-                "url": "",
-                "hideInMenu": false
-            }]
-    },
-    {
-        "id": 5,
-        "path": "/videoUpload",  // 第一级菜单前面有斜杠： /
-        "component": "Layout",
-        "name": "",  // 可有可无，我用不到*****
-        "title": "队伍测试(智能)",  // 可有可无，我用不到*****
-        "icon": "ios-color-wand",
-        "parentId": 0,
-        "enabled": 1,
-        "roles": null,
-        "meta": {
-            "access": null,
-            "title": "队伍测试(智能)",        //  title取我定义的
-            "icon": "ios-color-wand",
-            "hideInMenu": false
-        },
-        "url": "",
-        "hideInMenu": false,
-        "children": [
-            {
-                "id": 3,
-                "path": "videoUpload", // children中的path：取我定义的（子菜单path前不加斜杠： /）
-                "component": "views/videoUpload/index", // children中的component：取我定义的，最前面不加斜杠： /
-                "name": "videoUpload",     // children中的name：取我定义的
-                "title": "队伍测试(人工)",      // 可有可无*****
-                "icon": "ios-basket-outline",
-                "parentId": 1,
-                "enabled": 1,
-                "children": null,
-                "roles": null,
-                "meta": {
-                    "access": null,
-                    "title": "队伍测试(人工)",    // children中的title：取我定义的
-                    "icon": "ios-basket-outline",
-                    "hideInMenu": false
-                },
-                "url": "",
-                "hideInMenu": false
-            }]
-    },
-    {
-        "id": 6,
+        "id": 3,
         "path": "/report",  // 第一级菜单前面有斜杠： /
         "component": "Layout",
         "name": "",  // 可有可无，我用不到*****
@@ -285,7 +159,68 @@ let aa = [
                 "hideInMenu": false
             }]
     },
-    ]
+
+    {
+        "id": 4,
+        "path": "/trainingProgram",  // 第一级菜单前面有斜杠： /
+        "component": "Layout",
+        "name": "",  // 可有可无，我用不到*****
+        "title": "训练计划",  // 可有可无，我用不到*****
+        "icon": "ios-color-wand",
+        "parentId": 0,
+        "enabled": 1,
+        "roles": null,
+        "meta": {
+            "access": null,
+            "title": "训练计划",        //  title取我定义的
+            "icon": "ios-color-wand",
+            "hideInMenu": false
+        },
+        "url": "",
+        "hideInMenu": false,
+        "children": [
+            {
+                "id": 3,
+                "path": "weekProgram", // children中的path：取我定义的（子菜单path前不加斜杠： /）
+                "component": "views/trainingProgram/weekProgram/weekProgram", // children中的component：取我定义的，最前面不加斜杠： /
+                "name": "weekProgram",     // children中的name：取我定义的
+                "title": "新增周训练计划",      // 可有可无*****
+                "icon": "ios-basket-outline",
+                "parentId": 1,
+                "enabled": 1,
+                "children": null,
+                "roles": null,
+                "meta": {
+                    "access": null,
+                    "title": "新增周训练计划",    // children中的title：取我定义的
+                    "icon": "ios-basket-outline",
+                    "hideInMenu": false,
+                    "noCache": true     // 这个是新加的字段！！！！！！！！！！！！
+                },
+                "url": "",
+                "hideInMenu": false
+            }, {
+                "id": 5,
+                "path": "monthProgram",
+                "component": "views/trainingProgram/monthProgram/monthProgram",
+                "name": "monthProgram",
+                "title": "新增月训练计划",
+                "icon": null,
+                "parentId": 1,
+                "enabled": 1,
+                "children": null,
+                "roles": null,
+                "meta": {
+                    "access": null,
+                    "title": "新增月训练计划",
+                    "icon": "ios-basket-outline",
+                    "hideInMenu": false
+                },
+                "url": "",
+                "hideInMenu": false
+            }]
+    },
+]
 
 
 // 遍历路由，重组字段(接口可以调通的时候启用)
@@ -332,6 +267,25 @@ function eachRouter(route) {
 // 将后台返回的路由数据的集合进行组装(成为路由的格式)
 function reformRouters1(routersList) {
     let list = [
+        {
+            path: '/trainingProgram',
+            component: Layout,
+            meta: {title: '训练计划'},
+            children: [
+                {
+                    path: 'weekProgram',
+                    component: () => import('@/views/trainingProgram/weekProgram/weekProgram'),
+                    name: 'weekProgram',
+                    meta: {title: '新增周训练计划'}
+                },
+                {
+                    path: 'monthProgram',
+                    component: () => import('@/views/trainingProgram/monthProgram/monthProgram'),
+                    name: 'monthProgram',
+                    meta: {title: '新增月训练计划'}
+                }
+            ]
+        },
         {
             path: '/teamOverview',
             component: Layout,
@@ -460,7 +414,7 @@ const user = {
             return new Promise((resolve, reject) => {
 
                 // 模拟
-                let newRouters = reformRouters1(aa);
+                let newRouters = reformRouters(aa);
                 commit('SET_ROUTERS', newRouters);
                 resolve()
 
@@ -486,75 +440,6 @@ const user = {
                 // })
             })
         },
-
-        // 用户名登录
-        // LoginByUsername({commit}, userInfo) {
-        //     const username = userInfo.username.trim()
-        //     return new Promise((resolve, reject) => {
-        //         loginByUsername(username, userInfo.password).then(response => {
-        //             const data = response.data
-        //             // commit('SET_TOKEN', data.token)
-        //             // setToken(response.data.token)
-        //             commit('SET_ROLES', data.token);    // 系统已经被我改成判断roles了，而非token
-        //             Cookies.set('roles',['aaa']);
-        //             resolve()
-        //         }).catch(error => {
-        //             reject(error)
-        //         })
-        //     })
-        // },
-        //
-        // // 获取用户菜单-路由(业务需求，菜单和路由需要在后端返回)
-        // GetUserMenue({commit, state}) {
-        //     return new Promise((resolve, reject) => {
-        //         getUserMenue(state.token).then(response => {
-        //             let newRouters = reformRouters1();
-        //             commit('SET_ROUTERS', newRouters)
-        //             resolve()
-        //         }).catch(error => {
-        //             reject(error)
-        //         })
-        //     })
-        // },
-
-        // 获取用户信息
-        // GetUserInfo({ commit, state }) {
-        //   return new Promise((resolve, reject) => {
-        //     getUserInfo(state.token).then(response => {
-        //       if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
-        //         reject('error')
-        //       }
-        //       const data = response.data
-        //
-        //       if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-        //         commit('SET_ROLES', data.roles)
-        //       } else {
-        //         reject('getInfo: roles must be a non-null array !')
-        //       }
-        //
-        //       commit('SET_NAME', data.name)
-        //       commit('SET_AVATAR', data.avatar)
-        //       commit('SET_INTRODUCTION', data.introduction)
-        //       resolve(response)
-        //     }).catch(error => {
-        //       reject(error)
-        //     })
-        //   })
-        // },
-
-        // 第三方验证登录
-        // LoginByThirdparty({ commit, state }, code) {
-        //   return new Promise((resolve, reject) => {
-        //     commit('SET_CODE', code)
-        //     loginByThirdparty(state.status, state.email, state.code).then(response => {
-        //       commit('SET_TOKEN', response.data.token)
-        //       setToken(response.data.token)
-        //       resolve()
-        //     }).catch(error => {
-        //       reject(error)
-        //     })
-        //   })
-        // },
 
         // 登出
         LogOut({commit, state}) {
