@@ -431,7 +431,7 @@
 <script>
     import waves from '@/directive/waves' // 水波纹指令
     import { getTeamListAll } from '@/api/team'
-    import { getTestAthleteList, uploadTestVideo, finishTeamVideo, submitOfCount } from '@/api/athlete'
+    // import { getTestAthleteList, uploadTestVideo, finishTeamVideo, submitOfCount } from '@/api/athlete'
     export default ({
         directives: {waves},
         data() {

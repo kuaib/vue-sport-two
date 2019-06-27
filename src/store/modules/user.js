@@ -387,7 +387,8 @@ const user = {
     actions: {
         // 用户名登录
         LoginByUsername({commit, state}, userInfo) {
-            const username = userInfo.username.trim()
+            console.log(userInfo)
+            // const username = userInfo.username.trim()
             return new Promise((resolve, reject) => {
                 loginByUsername(userInfo).then(response => {
                     if (response.data.code === 200) {

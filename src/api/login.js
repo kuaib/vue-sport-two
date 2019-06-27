@@ -14,10 +14,11 @@ export function loginByUsername(userInfo) {
             return ret.substr(0, ret.length - 1)
         }],
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        data: {
-            username: userInfo.username,
-            password: userInfo.password
-        }
+        // data: {
+        //     username: userInfo.username,
+        //     password: userInfo.password
+        // }
+        data: userInfo
     })
 }
 

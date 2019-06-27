@@ -3,17 +3,17 @@
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm"
              label-position="left">
         <el-form-item prop="phone">
-            <el-input name="phone" v-model="loginForm.phone" maxlength="11" autoComplete="on" placeholder="请输入手机号"></el-input>
+            <el-input name="phone" v-model="loginForm.phone" maxlength="11" autoComplete="off" placeholder="手机号"></el-input>
         </el-form-item>
 
         <el-row>
-            <el-col :span="17" style="padding-right: 20px;">
+            <el-col :span="17" style="padding-right: 10px;">
                 <el-form-item prop="code">
-                    <el-input name="code" v-model="loginForm.code" maxlength="6" autoComplete="on" placeholder="请输入验证码"></el-input>
+                    <el-input name="code" v-model="loginForm.code" maxlength="6" autoComplete="off" placeholder="验证码"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="7">
-                <el-button v-if="seconds==60" type="primary" @click.native.prevent="getCode" class="code-btn">获取验证码</el-button>
+                <el-button v-if="seconds==60" type="primary" @click.native.prevent="getCode" class="code-btn" :disabled="!/^1[3456789]\d{9}$/.test(loginForm.phone)">获取验证码</el-button>
                 <el-button v-else type="primary" disabled class="code-btn">{{seconds}}s后重新获取</el-button>
             </el-col>
         </el-row>
@@ -42,7 +42,7 @@
                 } else {
                     callback();
                 }
-            }
+            };
             return {
                 loading: false,     // 提交按钮loading
                 seconds: 60,        // 获取验证码倒计时
@@ -83,15 +83,7 @@
             onSubmit() {
                 this.$refs.loginForm.validate((valid) => {
                     if (valid) {
-                        aaa().then(res => {
-                            if(res.code == 1) {
-
-                            } else {
-                                this.loading = false;
-                            }
-                        }).catch(() => {
-                            this.loading = false;
-                        })
+                        this.$emit('onSubmit', {phone: this.loginForm.phone, code: this.loginForm.code}, 'codeLoginForm');
                     } else {
                         console.log('error submit!!');
                         return false;

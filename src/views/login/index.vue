@@ -6,16 +6,16 @@
             <p>打造能征善战、作风优良的国家队</p>
         </div>
 
-        <el-card class="login-form-wrapper">
-            <div slot="header" class="clearfix">
-                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                    <el-menu-item index="1">短信验证码登陆</el-menu-item>
-                    <el-menu-item index="2">密码登陆</el-menu-item>
-                </el-menu>
-            </div>
-            <code-login-form v-show="activeIndex==='1'"></code-login-form>
-            <pswd-login-form v-show="activeIndex==='2'" @onSubmit="onSubmit"></pswd-login-form>
-        </el-card>
+        <div class="login-form-wrapper">
+            <el-row class="choose-title">
+                <el-col :span="12" :class="{'is-act': activeIndex==='1'}" @click.native.prevent="activeIndex='1'"><span class="words">短信验证码登陆</span></el-col>
+                <el-col :span="12" :class="{'is-act': activeIndex==='2'}" @click.native.prevent="activeIndex='2'"><span class="words">密码登陆</span></el-col>
+            </el-row>
+            <el-row class="choose-form">
+                <code-login-form v-show="activeIndex==='1'" @onSubmit="onSubmit" ref="codeLoginForm"></code-login-form>
+                <pswd-login-form v-show="activeIndex==='2'" @onSubmit="onSubmit" ref="pswdLoginForm"></pswd-login-form>
+            </el-row>
+        </div>
 
         <el-dialog :title="$t('login.forgetPswd')" :visible.sync="showDialog" append-to-body>
             <forget-psw/>
@@ -26,31 +26,34 @@
 <script>
     import codeLoginForm from './components/codeLoginForm'
     import pswdLoginForm from './components/pswdLoginForm'
-    import forgetPsw from './forgetPsw'
     import Cookies from 'js-cookie'
 
     export default {
-        components: {codeLoginForm, pswdLoginForm, forgetPsw},
+        components: {codeLoginForm, pswdLoginForm},
         name: 'login',
         data() {
             return {
-                activeIndex: '1',   // 登录方式
-                showDialog: false
+                activeIndex: '2',   // 登录方式
+                showDialog: false   // 是否显示弹窗
             }
         },
-        methods: {
-            // 切换登录方式
-            handleSelect(key) {
-                this.activeIndex = key
-            },
 
+        methods: {
             // 登录
-            onSubmit(params) {
+            onSubmit(params, type) {
+                this.$refs[type].loading = true;
                 this.$store.dispatch('LoginByUsername', params).then(() => {
-                    this.loading = false;
+                    this.$refs[type].loading = false;
+                    if(type === 'pswdLoginForm') {
+                        if(this.$refs[type].rememberPswd) {
+                            Cookies.set('loginInfo', {phone: params.phone, password: params.password}, { expires: 7 });
+                        } else {
+                            Cookies.remove('loginInfo');
+                        }
+                    }
                     this.$router.push({path: '/'})
                 }).catch(() => {
-                    this.loading = false
+                    this.$refs[type].loading = false;
                 })
             }
         }
@@ -69,6 +72,7 @@
         background: url('../../assets/images/background.jpeg') no-repeat;
         background-size: cover;
 
+        /*文字提示*/
         .tips-words {
             text-align: center;
             font-size: 20px;
@@ -76,8 +80,10 @@
             padding-top: 30px;
             color: #fff;
         }
+
+        /*登陆表单*/
         .login-form-wrapper {
-            width: 50%;
+            width: 30%;
             position: absolute;
             left: 50%;
             top: 150px;
@@ -88,14 +94,56 @@
             -ms-transform: translateX(-50%);
             -o-transform: translateX(-50%);
             transform: translateX(-50%);
-            .login-form {
-                width: 55%;
-                margin: 0 auto;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+
+            /*选项切换头部*/
+            .choose-title {
+                padding: 0 25px;
+                text-align: center;
+                color: #fff;
+                font-weight: 700;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+                .el-col {
+                    padding: 25px 0;
+                    cursor: pointer;
+                    &:hover {
+                        color: #409EFF;
+                    }
+                }
+                .words {
+                    padding-bottom: 10px;
+                }
+                .is-act {
+                    .words {
+                        border-bottom: 2px solid #fff;
+                    }
+                }
             }
+
+            /*选项切换表单*/
+            .choose-form {
+                padding: 20px 0;
+                .login-form {
+                    width: 80%;
+                    margin: 0 auto;
+                    .code-btn {
+                        padding: 15px 0;
+                        text-align: center;
+                    }
+                }
+            }
+
+            /*登陆按钮*/
             .loginBtn {
                 display: block;
-                width: 80%;
+                width: 100%;
                 margin: 0 auto;
+            }
+            .loginBtn.el-button--medium {
+                padding: 15px 20px;
+                font-size: 16px;
             }
             .code-btn {
                 width: 100%;
@@ -103,27 +151,7 @@
             }
         }
 
-        /*样式重绘*/
-        .el-card__header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
-            .el-menu--horizontal {
-                border-bottom: none !important;
-                background: transparent;
-            }
-        }
-        .el-menu--horizontal>.el-menu-item.is-active {
-            font-weight: 700;
-            color: #fff;
-            font-size: 18px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3) !important;
-        }
-        .el-menu--horizontal>.el-menu-item {
-            color: #fff;
-        }
-        .el-dropdown-menu__item--divided:before, .el-menu, .el-menu--horizontal>.el-menu-item:not(.is-disabled):focus, .el-menu--horizontal>.el-menu-item:not(.is-disabled):hover, .el-menu--horizontal>.el-submenu .el-submenu__title:hover {
-            background: transparent !important;
-            color: #fff;
-        }
+
         .el-input {
             display: inline-block;
             height: 47px;
@@ -149,5 +177,10 @@
             border-radius: 5px;
             color: #454545;
         }
+
+        /*input:-internal-autofill-selected {*/
+            /*background-color: transparent !important;*/
+            /*color: snow !important;*/
+        /*}*/
     }
 </style>

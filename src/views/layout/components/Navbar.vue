@@ -4,14 +4,9 @@
             <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
             <div class="projectName">111</div>
             <el-row class="right-menu">
-                <el-button type="primary" @click="showDialog=true">{{$t('navbar.changePsw')}}</el-button>
                 <el-button type="primary" @click="logout">{{$t('navbar.logOut')}}</el-button>
             </el-row>
         </el-menu>
-
-        <el-dialog :title="$t('navbar.changePsw')" :visible.sync="showDialog" append-to-body>
-            <change-psw></change-psw>
-        </el-dialog>
     </div>
 
 </template>
@@ -19,15 +14,9 @@
 <script>
     import {mapGetters} from 'vuex'
     import Hamburger from '@/components/Hamburger'
-    import changePsw from './changePsw'
 
     export default {
-        data() {
-            return {
-                showDialog: false
-            }
-        },
-        components: {Hamburger, changePsw},
+        components: {Hamburger},
         computed: {
             ...mapGetters([
                 'sidebar',

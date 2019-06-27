@@ -42,7 +42,7 @@
 <script>
     import LangSelect from '@/components/LangSelect'
     // import forgetPswd from './forgetPswd'
-    import forgetPsw from './forgetPsw'
+    import forgetPsw from './components/forgetPsw'
 
     export default {
         components: {LangSelect, forgetPsw},

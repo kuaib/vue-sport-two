@@ -18,13 +18,13 @@
                                 <el-input placeholder="请输入验证码" v-model="form.code" show-password maxlength="6"></el-input>
                             </el-col>
                             <el-col :span="8">
-                                <el-button v-if="seconds==60" type="primary" @click.native.prevent="getCode" class="code-btn">获取验证码</el-button>
+                                <el-button v-if="seconds==60" type="primary" @click.native.prevent="getCode" class="code-btn" :disabled="!/^1[3456789]\d{9}$/.test(form.phone)">获取验证码</el-button>
                                 <el-button v-else type="primary" disabled class="code-btn">{{seconds}}s后重新获取</el-button>
                             </el-col>
                         </el-row>
                     </el-form-item>
                     <el-form-item label="新密码" prop="newPsw">
-                        <el-input placeholder="请输入新密码" v-model="form.newPsw" show-password></el-input>
+                        <el-input placeholder="请输入新密码" type="password" v-model="form.newPsw" show-password></el-input>
                     </el-form-item>
                     <el-form-item style="text-align: center;">
                         <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">更改密码</el-button>
@@ -76,13 +76,13 @@
 
                 rules: {
                     phone: [
-                        {validator: validatePhone, trigger: 'blur'}
+                        {validator: validatePhone, required: true, trigger: 'blur'}
                     ],
                     code: [
-                        {validator: validateCode, trigger: 'blur'}
+                        {validator: validateCode, required: true, trigger: 'blur'}
                     ],
                     newPsw: [
-                        {validator: validateNewPsw, trigger: 'blur'}
+                        {validator: validateNewPsw, required: true, trigger: 'blur'}
                     ],
                 }
             }
@@ -94,7 +94,7 @@
                 this.$refs.forgetPswForm.validate(valid => {
                     if (valid) {
                         this.loading = true;
-                        forgePsw(this.form).then(res => {
+                        forgetPsw(this.form).then(res => {
                             this.loading = false;
                         }).catch(() => {
                             this.loading = false

@@ -96,7 +96,6 @@
 
 <script>
     import { getTeamListAll } from '@/api/team'
-    import { getAthleteListByTeam } from '@/api/athlete'
     import { canExport, dowloadPdf } from '@/api/report'
     export default ({
         data() {
