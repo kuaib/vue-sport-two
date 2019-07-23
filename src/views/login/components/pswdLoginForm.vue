@@ -26,8 +26,8 @@
 
         <!--修改密码弹窗-->
         <el-dialog :title="dialogTitle" :visible.sync="show" append-to-body>
-            <change-psw v-show="dialogTitle==='修改密码'" />
-            <forget-psw v-show="dialogTitle==='忘记密码'" />
+            <change-psw v-show="dialogTitle==='修改密码'" @completeAct="show=false" :showDia="show" />
+            <forget-psw v-show="dialogTitle==='忘记密码'" @completeAct="show=false" :showDia="show" />
         </el-dialog>
     </div>
 
@@ -78,27 +78,6 @@
         },
 
         methods: {
-            // 获取验证码
-            getCode() {
-                this.seconds--;
-                let timer = setInterval(() => {
-                    this.seconds--;
-                    if(this.seconds ===0) {
-                        clearInterval(timer);
-                        this.seconds = 60;
-                    }
-                }, 1000)
-                aaa().then(res => {
-                    if(res.code == 1) {
-
-                    } else {
-
-                    }
-                }).catch(() => {
-
-                })
-            },
-
             // 登录
             onSubmit() {
                 this.$refs.loginForm.validate((valid) => {

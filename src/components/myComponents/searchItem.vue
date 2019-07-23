@@ -1,43 +1,55 @@
+<!--训练计划页面左侧搜索插件-->
 <template>
-    <div class="select-team">
-        <div class="row-item actBtn clearfix">
+    <div class="select-item-wrapper">
+        <div class="row-item">
+            <el-select clearable v-model="listQuery.bigId" placeholder="大项">
+                <el-option v-for="item in bigList" :label="item.dicValue" :value="item.dicKey"
+                           :key="item.dicKey" @change="changeBig"></el-option>
+            </el-select>
+        </div>
+        <div class="row-item">
+            <el-select clearable v-model="listQuery.smallId" placeholder="小项">
+                <el-option v-for="item in smallList" :label="item.dicValue" :value="item.dicKey"
+                           :key="item.dicKey"></el-option>
+            </el-select>
+        </div>
+        <div class="row-item">
+            <el-select clearable v-model="listQuery.teamId" placeholder="队伍">
+                <el-option v-for="item in teamList" :label="item.dicValue" :value="item.dicKey"
+                           :key="item.dicKey"></el-option>
+            </el-select>
+        </div>
+        <div class="row-item">
+            <el-select clearable v-model="listQuery.groupId" placeholder="分组">
+                <el-option v-for="item in groupList" :label="item.dicValue" :value="item.dicKey"
+                           :key="item.dicKey"></el-option>
+            </el-select>
+        </div>
+        <div class="row-item">
+            <el-date-picker v-model="startDate" type="date" placeholder="开始时间" value-format="yyyy-MM-dd"></el-date-picker>
+        </div>
+        <div class="row-item">
+            <el-date-picker v-model="endDate" type="date" placeholder="结束时间" value-format="yyyy-MM-dd"></el-date-picker>
+        </div>
+        <div class="row-item">
+            <el-input @keyup.enter.native="handleFilter" style="width: 200px;" placeholder="请输入组名关键字" v-model="listQuery.searchKey">
+            </el-input>
+        </div>
+        <div class="row-item act-btn">
             <el-button class="search" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索 Search</el-button>
         </div>
 
-        <div class="row-item">
-            <el-select clearable v-model="listQuery.specialId" placeholder="请选择项目 Select Sport">
-                <el-option v-for="item in specialList" :label="item.dicValue" :value="item.dicKey"
-                           :key="item.dicKey"></el-option>
-            </el-select>
-        </div>
-        <div class="row-item">
-            <el-select clearable v-model="listQuery.organizationId" placeholder="请选择单位 Select Unit">
-                <el-option v-for="item in orgList" :label="item.dicValue" :value="item.dicKey"
-                           :key="item.dicKey"></el-option>
-            </el-select>
-        </div>
-        <div class="row-item">
-            <el-select clearable v-model="listQuery.categoryId" placeholder="请选择类别 Select Class">
-                <el-option v-for="item in cateList" :label="item.dicValue" :value="item.dicKey"
-                           :key="item.dicKey"></el-option>
-            </el-select>
-        </div>
-        <div class="row-item">
-            <el-input @keyup.enter.native="handleFilter" style="width: 200px;" placeholder="请输入队名 Enter Team Name" v-model="listQuery.searchKey">
-                </el-input>
-        </div>
-
 
         <div class="row-item">
-            <div class="title">队伍列表 Team List</div>
+            <div class="title">组列表 Group List</div>
             <el-table :data="list" v-loading="listLoading" border fit highlight-current-row @row-click="selectRow"
-                      style="width: 100%" ref="teamTable">
-                <el-table-column align="center" :render-header="renderHeader" label="队名 Name">
+                      style="width: 100%" ref="groupTable">
+                <el-table-column align="center" :render-header="renderHeader" label="组名 Group">
                     <template slot-scope="scope">
                         <span>{{scope.row.teamName}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column align="center" :render-header="renderHeader" label="项目 Sport">
+                <el-table-column align="center" :render-header="renderHeader" label="队伍 Team">
                     <template slot-scope="scope">
                         <span>{{scope.row.specialName}}</span>
                     </template>
@@ -57,54 +69,33 @@
 
 <script>
     import waves from '@/directive/waves' // 水波纹指令
-    // import { getAllDic } from '@/api/common'
     import { getTeamList } from '@/api/team'
     export default ({
         directives: {waves},
         data() {
             return {
-                list: [],       // 队伍列表
-                listLoading: false,
+                list: [],           // table列表
+                listLoading: false, // table loading
 
-                specialList: [],    // 项目
-                orgList: [],        // 单位
-                cateList: [],       // 类别
+                startDate: '',      // 开始时间
+                endDate: '',        // 结束时间
 
                 total: null,        // 总条目数
-                listQuery: {
+                listQuery: {        // 查询条件
                     current: 1,
                     pageSize: 10,
                     searchKey: null,
-                    specialId: null,
-                    categoryId: null,
-                    organizationId: null
+                    bigId: null,
+                    smallId: null,
+                    teamId: null,
+                    groupId: null
                 }
             }
         },
         created() {
-           this.getList();   // 队伍列表
-           this.getSelectList();// 其他下拉列表
+            this.getBigList();
         },
         methods: {
-            // 获取下拉选项
-            getSelectList() {
-                getAllDic().then(res => {
-                    if (res.data.code === 200) {
-                        const data = res.data.data;
-                        this.specialList = data.specialList; // 项目
-                        this.orgList = data.orgList;    // 单位
-                        this.cateList = data.cateList;  // 类别
-                    } else {
-                        this.$message({
-                            message: res.data.msg,
-                            type: 'warning'
-                        })
-                    }
-                }).catch(rej => {
-                    console.log('获取失败')
-                })
-            },
-
             // 获取队伍列表
             getList() {
                 this.listLoading = true;
@@ -124,18 +115,17 @@
                         this.total = data.pagination.total;
                         this.listQuery.current = data.pagination.current;
                         this.$nextTick(() => { // 默认选择第一行数据
-                            this.$refs.teamTable.setCurrentRow(this.list[0])
+                            this.$refs.groupTable.setCurrentRow(this.list[0]);
                             this.selectRow(this.list[0])
                         })
                     } else {
                         this.$message({
                             message: res.data.msg,
-                            type: 'warning'
+                            type: 'error'
                         })
                     }
                 }).catch(rej => {
                     this.listLoading = false;
-                    console.log('获取队伍列表失败')
                 })
             },
 
@@ -166,13 +156,18 @@
             renderHeader(h, column) {
                 let title = column.column.label.split(' ');
                 return [h('p', {}, [title[0]]),h('p', {}, [title[1]])]
+            },
+
+            //-----------------切换搜索项------------
+            changeBig(a) {
+                console.log(this.listQuery.bigId)
             }
         }
     })
 </script>
 
-<style lang="scss">
-    .select-team {
+<style lang="scss" scoped>
+    .select-item-wrapper {
         .el-pager li {
             min-width: 25.5px !important;
         }
@@ -190,12 +185,10 @@
                 margin-bottom: 10px;
             }
         }
-        .actBtn {
-            .add {
-                float: left;
-            }
+        .act-btn {
+            text-align: center;
             .search {
-                float: right;
+                width: 80%;
             }
         }
     }

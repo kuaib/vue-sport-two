@@ -8,7 +8,7 @@
 
         <el-row :gutter="20">
             <el-col :span="16" :offset="4">
-                <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+                <el-form ref="changePswForm" :model="form" :rules="rules" label-width="80px">
                     <el-form-item label="初始密码" prop="initPsw">
                         <el-input placeholder="请输初始密码" type="password" v-model="form.initPsw" show-password></el-input>
                     </el-form-item>
@@ -31,15 +31,17 @@
     import {changePsw}  from '@/api/login'
 
     export default {
+        props: {
+            showDia: Boolean
+        },
         data() {
             let validateNewPsw = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入新密码'));
+                } else if (this.form.newPsw === this.form.initPsw) {
+                    callback(new Error('新密码与旧密码不能相同'));
                 } else {
-                    if (this.form.newPsw !== '') {
-                        this.$refs.form.validateField('confirmPsw');
-                    }
-                    callback();
+                    callback()
                 }
             };
             let validateConfirmPsw = (rule, value, callback) => {
@@ -76,16 +78,29 @@
 
         methods: {
             onSubmit() {
-                this.$refs.form.validate(valid => {
+                this.$refs.changePswForm.validate(valid => {
                     if (valid) {
                         this.loading = true;
                         changePsw(this.form).then(res => {
                             this.loading = false;
+                            if(res.code === 200) {
+                                this.$emit('completeAct');       // 关闭弹窗
+                            } else {
+                                this.$message.error(res.msg);
+                            }
                         }).catch(() => {
                             this.loading = false
                         })
                     }
                 })
+            }
+        },
+
+        watch: {
+            showDia: function (val) {
+                if(!val) {
+                    this.resetForm('changePswForm');
+                }
             }
         }
     }

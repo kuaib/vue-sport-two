@@ -1,4 +1,4 @@
-import {loginByUsername, logout, getUserInfo, getUserMenue} from '@/api/login'
+import {loginFn, logout, getUserInfo, getUserMenue} from '@/api/login'
 import {getToken, setToken, removeToken} from '@/utils/auth'
 import Layout from '@/views/layout/Layout'
 import {constantRouterMap} from '@/router'
@@ -162,17 +162,17 @@ let aa = [
 
     {
         "id": 4,
-        "path": "/trainingProgram",  // 第一级菜单前面有斜杠： /
+        "path": "/trainingAndSummary",  // 第一级菜单前面有斜杠： /
         "component": "Layout",
         "name": "",  // 可有可无，我用不到*****
-        "title": "训练计划",  // 可有可无，我用不到*****
+        "title": "训练和总结",  // 可有可无，我用不到*****
         "icon": "ios-color-wand",
         "parentId": 0,
         "enabled": 1,
         "roles": null,
         "meta": {
             "access": null,
-            "title": "训练计划",        //  title取我定义的
+            "title": "训练和总结",        //  title取我定义的
             "icon": "ios-color-wand",
             "hideInMenu": false
         },
@@ -181,10 +181,10 @@ let aa = [
         "children": [
             {
                 "id": 3,
-                "path": "weekProgram", // children中的path：取我定义的（子菜单path前不加斜杠： /）
-                "component": "views/trainingProgram/weekProgram/weekProgram", // children中的component：取我定义的，最前面不加斜杠： /
-                "name": "weekProgram",     // children中的name：取我定义的
-                "title": "新增周训练计划",      // 可有可无*****
+                "path": "yearTraining", // children中的path：取我定义的（子菜单path前不加斜杠： /）
+                "component": "views/trainingAndSummary/yearTraining/yearTraining", // children中的component：取我定义的，最前面不加斜杠： /
+                "name": "yearTraining",     // children中的name：取我定义的
+                "title": "年训练管理",      // 可有可无*****
                 "icon": "ios-basket-outline",
                 "parentId": 1,
                 "enabled": 1,
@@ -192,7 +192,7 @@ let aa = [
                 "roles": null,
                 "meta": {
                     "access": null,
-                    "title": "新增周训练计划",    // children中的title：取我定义的
+                    "title": "年训练管理",    // children中的title：取我定义的
                     "icon": "ios-basket-outline",
                     "hideInMenu": false,
                     "noCache": true     // 这个是新加的字段！！！！！！！！！！！！
@@ -201,10 +201,10 @@ let aa = [
                 "hideInMenu": false
             }, {
                 "id": 5,
-                "path": "monthProgram",
-                "component": "views/trainingProgram/monthProgram/monthProgram",
-                "name": "monthProgram",
-                "title": "新增月训练计划",
+                "path": "monthTraining",
+                "component": "views/trainingAndSummary/monthTraining/monthTraining",
+                "name": "monthTraining",
+                "title": "月训练管理",
                 "icon": null,
                 "parentId": 1,
                 "enabled": 1,
@@ -212,7 +212,26 @@ let aa = [
                 "roles": null,
                 "meta": {
                     "access": null,
-                    "title": "新增月训练计划",
+                    "title": "月训练管理",
+                    "icon": "ios-basket-outline",
+                    "hideInMenu": false
+                },
+                "url": "",
+                "hideInMenu": false
+            }, {
+                "id": 6,
+                "path": "weekTraining",
+                "component": "views/trainingAndSummary/weekTraining/weekTraining",
+                "name": "weekTraining",
+                "title": "周训练管理",
+                "icon": null,
+                "parentId": 1,
+                "enabled": 1,
+                "children": null,
+                "roles": null,
+                "meta": {
+                    "access": null,
+                    "title": "周训练管理",
                     "icon": "ios-basket-outline",
                     "hideInMenu": false
                 },
@@ -385,14 +404,12 @@ const user = {
 
     // 请求方法都在api/login.js中
     actions: {
-        // 用户名登录
-        LoginByUsername({commit, state}, userInfo) {
-            console.log(userInfo)
-            // const username = userInfo.username.trim()
+        // 登录
+        loginFn({commit, state}, userInfo) {
             return new Promise((resolve, reject) => {
-                loginByUsername(userInfo).then(response => {
-                    if (response.data.code === 200) {
-                        const data = response.data.data;
+                loginFn(userInfo).then(response => {
+                    if (response.code === 200) {
+                        const data = response.data;
                         commit('SET_ROLES', filterPro(data.roles, 'roleCode'));    // 角色名称
                         commit('SET_REALNAME', data.realName);          // 真实姓名
                         commit('SET_USERNAME', data.username);          // 用户名
@@ -401,7 +418,7 @@ const user = {
                         Cookies.set('userName', state.userName);
                         resolve();
                     } else {
-                        this.$message(response.data.msg);
+                        this.$message(response.msg);
                     }
                     resolve()
                 }).catch(error => {
@@ -422,8 +439,8 @@ const user = {
 
                 // 真实
                 // getUserMenue(state.roles[0]).then(response => {
-                //     if (response.data.code === 200) {
-                //         const res = response.data.data;
+                //     if (response.code === 200) {
+                //         const res = response.data;
                 //         if (res && res.length > 0) { // 验证返回的菜单是否是一个非空数组
                 //             let newRouters = reformRouters(res);
                 //             // let newRouters = reformRouters1(res);

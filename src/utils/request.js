@@ -31,8 +31,9 @@ service.interceptors.response.use(response => {
         Cookies.remove('realName');
         Cookies.remove('userName');
         window.location.href = window.location.origin;
+    } else {
+        return response.data;
     }
-    return response;
 }, error => {
     this.$message({
         message: '系统开小差了，请稍后重试',

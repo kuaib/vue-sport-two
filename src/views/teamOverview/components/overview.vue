@@ -55,7 +55,7 @@
 </template>
 
 <script>
-    import { getTeamAthlete } from '@/api/team'
+    // import { getTeamAthlete } from '@/api/team'
     export default ({
         data() {
             return {

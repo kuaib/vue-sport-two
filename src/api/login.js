@@ -1,8 +1,7 @@
 import request from '@/utils/request'
 
-// 接口可以调通的时候打开
 // 登陆
-export function loginByUsername(userInfo) {
+export function loginFn(userInfo) {
     return request({
         url: '/sports/login',
         method: 'post',
@@ -14,10 +13,6 @@ export function loginByUsername(userInfo) {
             return ret.substr(0, ret.length - 1)
         }],
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        // data: {
-        //     username: userInfo.username,
-        //     password: userInfo.password
-        // }
         data: userInfo
     })
 }
@@ -49,7 +44,7 @@ export function getUserInfo(token) {
 }
 
 // 忘记密码
-export function forgePsw(data) {
+export function forgetPsw(data) {
     return request({
         url: '/user/forgePsw',
         method: 'post',
@@ -61,6 +56,15 @@ export function forgePsw(data) {
 export function changePsw(data) {
     return request({
         url: '/user/changePsw',
+        method: 'post',
+        data: data
+    })
+}
+
+// 获取验证码
+export function getCode(data) {
+    return request({
+        url: '/user/getCode',
         method: 'post',
         data: data
     })

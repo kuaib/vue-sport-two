@@ -1,3 +1,4 @@
+<!--忘记密码-->
 <template>
     <div class="forget-psw-wrapper">
         <div class="tip-words">
@@ -36,9 +37,12 @@
 </template>
 
 <script>
-    import {forgetPsw}  from '@/api/login'
+    import {forgetPsw, getCode}  from '@/api/login'
     export default {
         name: 'forgetPsw',
+        props: {
+            showDia: Boolean
+        },
         data() {
             let validatePhone = (rule, value, callback) => {
                 if (value === '') {
@@ -96,6 +100,11 @@
                         this.loading = true;
                         forgetPsw(this.form).then(res => {
                             this.loading = false;
+                            if(res.code === 200) {
+                                this.$emit('completeAct');       // 关闭弹窗
+                            } else {
+                                this.$message.error(res.msg);
+                            }
                         }).catch(() => {
                             this.loading = false
                         })
@@ -113,13 +122,25 @@
                         this.seconds = 60;
                     }
                 }, 1000)
-                aaa().then(res => {
-                    if(res.code == 1) {
-
+                getCode({phone: this.form.phone}).then(res => {
+                    if(res.code === 200) {
+                        this.$message({
+                            message: '验证码已发送',
+                            type: 'success'
+                        });
                     } else {
-
+                        this.$message.error(res.msg);
                     }
                 })
+            }
+        },
+
+        watch: {
+            // 弹窗关闭后清空表单
+            showDia: function (val) {
+                if(!val) {
+                    this.resetForm('forgetPswForm');
+                }
             }
         }
     }

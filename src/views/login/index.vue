@@ -1,157 +1,130 @@
 <template>
-    <div class="login-wrapper">
-        <div class="tips-words">
-            <p>TEAM CHINA</p>
-            <p>增强使命感、责任感、荣誉感</p>
-            <p>打造能征善战、作风优良的国家队</p>
-        </div>
+    <div class="login-container">
+        <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm"
+                 label-position="left">
+            <div class="title-container">
+                <h3 class="title">{{$t('login.title')}}</h3>
+                <!--<lang-select class="set-language"></lang-select>-->
+            </div>
+            <el-form-item prop="username">
+                <span class="svg-container svg-container_login">
+                  <svg-icon icon-class="user"/>
+                </span>
+                <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" :placeholder="$t('login.username')"></el-input>
+            </el-form-item>
 
-        <div class="login-form-wrapper">
-            <el-row class="choose-title">
-                <el-col :span="12" :class="{'is-act': activeIndex==='1'}" @click.native.prevent="activeIndex='1'"><span class="words">短信验证码登陆</span></el-col>
-                <el-col :span="12" :class="{'is-act': activeIndex==='2'}" @click.native.prevent="activeIndex='2'"><span class="words">密码登陆</span></el-col>
-            </el-row>
-            <el-row class="choose-form">
-                <code-login-form v-show="activeIndex==='1'" @onSubmit="onSubmit" ref="codeLoginForm"></code-login-form>
-                <pswd-login-form v-show="activeIndex==='2'" @onSubmit="onSubmit" ref="pswdLoginForm"></pswd-login-form>
-            </el-row>
-        </div>
+            <el-form-item prop="password">
+                <span class="svg-container">
+                  <svg-icon icon-class="password"/>
+                </span>
+                <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin"
+                          v-model="loginForm.password" autoComplete="on"
+                          :placeholder="$t('login.password')"></el-input>
+                <span class="show-pwd" @click="showPwd">
+                    <svg-icon v-show="passwordType==='password'" icon-class="eyeclose"/>
+                    <svg-icon v-show="!passwordType" icon-class="eye"/>
+                </span>
+            </el-form-item>
+
+            <el-button class="loginBtn" type="primary" :loading="loading" @click.native.prevent="handleLogin">{{$t('login.logIn')}}</el-button>
+            <div class="tips">忘记密码？请联系微信jluhaoqiang处理</div>
+        </el-form>
 
         <el-dialog :title="$t('login.forgetPswd')" :visible.sync="showDialog" append-to-body>
             <forget-psw/>
         </el-dialog>
+
     </div>
 </template>
 
 <script>
-    import codeLoginForm from './components/codeLoginForm'
-    import pswdLoginForm from './components/pswdLoginForm'
-    import Cookies from 'js-cookie'
+    import LangSelect from '@/components/LangSelect'
+    import forgetPsw from './components/forgetPsw'
 
     export default {
-        components: {codeLoginForm, pswdLoginForm},
+        components: {LangSelect, forgetPsw},
         name: 'login',
         data() {
+            const validateUsername = (rule, value, callback) => {
+                if (value.trim() === '') {
+                    callback(new Error('请输入用户名'))
+                } else if (this.syncTextUser) {
+                    callback(new Error(this.$t('login.usernameW2')))
+                } else {
+                    callback()
+                }
+            }
+            const validatePassword = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'))
+                } else if (value.length < 6) {
+                    callback(new Error('密码长度不能小于6位'))
+                } else {
+                    callback()
+                }
+            }
             return {
-                activeIndex: '2',   // 登录方式
-                showDialog: false   // 是否显示弹窗
+                loginForm: {
+                    username: 'admin',
+                    password: '1234567'
+                },
+                loginRules: {
+                    username: [{required: true, trigger: 'blur', message: '请输入用户名'}],
+                    password: [{required: true, trigger: 'blur', validator: validatePassword}]
+                },
+                passwordType: 'password',
+                loading: false,
+                showDialog: false
             }
         },
-
         methods: {
-            // 登录
-            onSubmit(params, type) {
-                this.$refs[type].loading = true;
-                this.$store.dispatch('LoginByUsername', params).then(() => {
-                    this.$refs[type].loading = false;
-                    if(type === 'pswdLoginForm') {
-                        if(this.$refs[type].rememberPswd) {
-                            Cookies.set('loginInfo', {phone: params.phone, password: params.password}, { expires: 7 });
-                        } else {
-                            Cookies.remove('loginInfo');
-                        }
+            // 密码可见性切换
+            showPwd() {
+                if (this.passwordType === 'password') {
+                    this.passwordType = ''
+                } else {
+                    this.passwordType = 'password'
+                }
+            },
+            handleLogin() {
+                this.$refs.loginForm.validate(valid => {
+                    if (valid) {
+                        this.loading = true;
+                        this.$store.dispatch('loginFn', this.loginForm).then(() => {
+                            this.loading = false;
+                            this.$router.push({path: '/'})
+                        }).catch(() => {
+                            this.loading = false
+                        })
+                    } else {
+                        console.log('error submit!!')
+                        return false
                     }
-                    this.$router.push({path: '/'})
-                }).catch(() => {
-                    this.$refs[type].loading = false;
                 })
             }
         }
     }
 </script>
 
-<style lang="scss">
+<style rel="stylesheet/scss" lang="scss">
+    /* 修复input 背景不协调 和光标变色 */
+    /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
+
     $bg: #283443;
     $light_gray: #eee;
     $cursor: #fff;
-    $dark_gray: #889aa4;
-    .login-wrapper {
-        position: fixed;
-        height: 100%;
-        width: 100%;
-        background: url('../../assets/images/background.jpeg') no-repeat;
-        background-size: cover;
 
-        /*文字提示*/
-        .tips-words {
-            text-align: center;
-            font-size: 20px;
-            font-weight: 700;
-            padding-top: 30px;
-            color: #fff;
-        }
-
-        /*登陆表单*/
-        .login-form-wrapper {
-            width: 30%;
-            position: absolute;
-            left: 50%;
-            top: 150px;
-            background: rgba(255,255,255, 0.2);
-            border: none !important;
-            -webkit-transform: translateX(-50%);
-            -moz-transform: translateX(-50%);
-            -ms-transform: translateX(-50%);
-            -o-transform: translateX(-50%);
-            transform: translateX(-50%);
-            -webkit-border-radius: 5px;
-            -moz-border-radius: 5px;
-            border-radius: 5px;
-
-            /*选项切换头部*/
-            .choose-title {
-                padding: 0 25px;
-                text-align: center;
-                color: #fff;
-                font-weight: 700;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
-                .el-col {
-                    padding: 25px 0;
-                    cursor: pointer;
-                    &:hover {
-                        color: #409EFF;
-                    }
-                }
-                .words {
-                    padding-bottom: 10px;
-                }
-                .is-act {
-                    .words {
-                        border-bottom: 2px solid #fff;
-                    }
-                }
-            }
-
-            /*选项切换表单*/
-            .choose-form {
-                padding: 20px 0;
-                .login-form {
-                    width: 80%;
-                    margin: 0 auto;
-                    .code-btn {
-                        padding: 15px 0;
-                        text-align: center;
-                    }
-                }
-            }
-
-            /*登陆按钮*/
-            .loginBtn {
-                display: block;
-                width: 100%;
-                margin: 0 auto;
-            }
-            .loginBtn.el-button--medium {
-                padding: 15px 20px;
-                font-size: 16px;
-            }
-            .code-btn {
-                width: 100%;
-                height: 47px;
+    @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
+        .login-container .el-input input {
+            color: $cursor;
+            &::first-line {
+                color: $light_gray;
             }
         }
+    }
 
-
+    /* reset element-ui css */
+    .login-container {
         .el-input {
             display: inline-block;
             height: 47px;
@@ -177,10 +150,71 @@
             border-radius: 5px;
             color: #454545;
         }
+    }
+</style>
 
-        /*input:-internal-autofill-selected {*/
-            /*background-color: transparent !important;*/
-            /*color: snow !important;*/
-        /*}*/
+<style rel="stylesheet/scss" lang="scss" scoped>
+    $bg: #2d3a4b;
+    $dark_gray: #889aa4;
+    $light_gray: #eee;
+
+    .login-container {
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background-color: $bg;
+        .login-form {
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: 520px;
+            padding: 35px 35px 15px 35px;
+            margin: 120px auto;
+        }
+        .tips {
+            font-size: 14px;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 12px;
+        }
+        .svg-container {
+            padding: 6px 5px 6px 15px;
+            color: $dark_gray;
+            vertical-align: middle;
+            width: 30px;
+            display: inline-block;
+            &_login {
+                font-size: 20px;
+            }
+        }
+        .title-container {
+            position: relative;
+            .title {
+                font-size: 26px;
+                color: $light_gray;
+                margin: 0px auto 40px auto;
+                text-align: center;
+                font-weight: bold;
+            }
+            .set-language {
+                color: #fff;
+                position: absolute;
+                top: 5px;
+                right: 0px;
+            }
+        }
+        .show-pwd {
+            position: absolute;
+            right: 10px;
+            top: 7px;
+            font-size: 16px;
+            color: $dark_gray;
+            cursor: pointer;
+            user-select: none;
+        }
+        .loginBtn {
+            width: 100%;
+        }
     }
 </style>
