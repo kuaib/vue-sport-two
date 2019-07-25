@@ -96,8 +96,8 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="primary" @click="toEdit(scope.row)">详情</i></el-button>
-                        <!--<el-button size="mini" type="danger" @click="handleDelete(scope.row)"><i class="el-icon-delete"></i></el-button>-->
+                        <el-button size="mini" type="primary" @click="toDetail(scope.row)">详情</el-button>
+                        <el-button size="mini" type="success" @click="toEdit(scope.row)">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -141,13 +141,26 @@
 
         methods: {
             // 去详情
-            toEdit(rowInfo) {
-
+            toEdit(row) {
+                this.$emit('getTeamInfo', row)
             },
 
-            // 搜索
-            handleSearch() {
+            // 点击搜索
+            handleFilter() {
+                this.listQuery.current = 1;
+                this.getList()
+            },
 
+            // 改变每页显示条目数
+            handleSizeChange(val) {
+                this.listQuery.pageSize = val;
+                this.getList()
+            },
+
+            // 跳转到指定页数
+            handleCurrentChange(val) {
+                this.listQuery.currentPage = val;
+                this.getList()
             },
 
             // 重置
